@@ -1,2 +1,4 @@
 *.pyc
 *.clean
+__pychache__
+timer.dat
