@@ -1,6 +1,6 @@
 Settings = dict()
 
-Settings["basis"] = "sto-3g"
+Settings["basis"] = "cc-pvdz"
 Settings["molecule"] = """
   0 1
   O

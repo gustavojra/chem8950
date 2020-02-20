@@ -5,7 +5,7 @@ import sys
 import scipy
 sys.path.append('.')
 from itertools import permutations
-#psi4.core.be_quiet()
+psi4.core.be_quiet()
 np.set_printoptions(precision=10, linewidth=140, suppress=True)
 
 #################################################################
@@ -605,17 +605,18 @@ for ishell in range(basis.nshell()):
     b = BasisFunction(center, c, exp, shell.am)
     bset.add(b)
 
-print(bset)
+print('Computing integrals')
 
-print('Computing integrals...', end=' ')
+print(bset)
 ## Overlap
 
 S = overlap(bset)
+pS = mints.ao_overlap().np
 
 ## Kinetic
 
 T = kinetic(bset)
-
+pT = mints.ao_kinetic().np
 
 ## Nuclei-electron potential energy
 
@@ -628,7 +629,7 @@ ERI = mints.ao_eri().np
 # FORM ONE-ELECTRON HAMILTONIAN
 
 h = T + V
-print(emoji('check'))
+print('Done ' + emoji('check'))
 
 # CONSTRUCT THE ORTHOGONALIZER
 
@@ -702,14 +703,12 @@ print('{} Spin-contamination  {:>16.12f}'.format(emoji('ugh'), contamination(C_a
 psi4.set_options({'basis': Settings['basis'],
                   'scf_type': 'pk',
                   'e_convergence': dE_max,
+                  'puream'   : False,
                   'reference': 'uhf'})
 
 # Compare to Psi4
-
 E_psi4, wfn_psi4 = psi4.energy('scf', return_wfn=True)
 print('{} Psi4  SCF Energy:   {:>16.12f}'.format(emoji('eyes'),E_psi4))
-#delete
-print('{} Final SCF Energy:   {:>16.12f}'.format(emoji('bolt'),E))
 
 # Compute Dipole moment
 au2debye = 1/0.393430307
@@ -723,8 +722,10 @@ dipole_z = np.einsum('uv,uv->', D_a, Dz) + np.einsum('uv,uv->', D_b, Dz) + nucdi
 total_dipole = np.array([dipole_x, dipole_y, dipole_z])
 
 print('\n{} Dipole Moment (atomic units):'.format(emoji('plug')))
-print('     X:     {:< 8.4f}    Y:     {:< 8.4f}      Z:    {:< 8.4f}'.format(*total_dipole))
-print('     Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole)))
+print('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
+print('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole))
+print(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole)))
 print('\n{} Dipole Moment (Debye):'.format(emoji('plug')))
-print('     X:     {:< 8.4f}    Y:     {:< 8.4f}      Z:    {:< 8.4f}'.format(*total_dipole*au2debye))
-print('     Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole*au2debye)))
+print('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
+print('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole*au2debye))
+print(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole*au2debye)))
