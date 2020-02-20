@@ -592,7 +592,6 @@ print(emoji('check'))
 # COMPUTE INTEGRALS
 
 # Collect basis function Info from Psi4 for and save into my BasisFunction objects
-
 bset = BasisSet(name=Settings['basis'])
 for ishell in range(basis.nshell()):
     shell = basis.shell(ishell)
@@ -616,12 +615,11 @@ S = overlap(bset)
 
 T = kinetic(bset)
 
-
-## Nuclei-electron potential energy
+## Nuclei-electron potential energy (From Psi4)
 
 V = mints.ao_potential().np
 
-## Electron repulsion integral
+## Electron repulsion integral (From Psi4)
 
 ERI = mints.ao_eri().np
 
@@ -714,9 +712,11 @@ print('{} Final SCF Energy:   {:>16.12f}'.format(emoji('bolt'),E))
 # Compute Dipole moment
 au2debye = 1/0.393430307
 
+# Get AO dipole moment
 Dx, Dy, Dz = dipole(bset)
 nucdip = molecule.nuclear_dipole()
 
+# Get final dipole moments for the wavefunction using density matrices
 dipole_x = np.einsum('uv,uv->', D_a, Dx) + np.einsum('uv,uv->', D_b, Dx) + nucdip[0]
 dipole_y = np.einsum('uv,uv->', D_a, Dy) + np.einsum('uv,uv->', D_b, Dy) + nucdip[1]
 dipole_z = np.einsum('uv,uv->', D_a, Dz) + np.einsum('uv,uv->', D_b, Dz) + nucdip[2]
