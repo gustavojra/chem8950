@@ -2,6 +2,7 @@ import psi4
 import numpy as np
 import pprint
 import sys
+import scipy
 sys.path.append('.')
 from itertools import permutations
 psi4.core.be_quiet()
