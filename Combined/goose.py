@@ -5,7 +5,7 @@ import sys
 import scipy
 sys.path.append('.')
 from itertools import permutations
-psi4.core.be_quiet()
+#psi4.core.be_quiet()
 np.set_printoptions(precision=10, linewidth=140, suppress=True)
 
 #################################################################
@@ -615,15 +615,11 @@ pS = mints.ao_overlap().np
 ## Kinetic
 
 T = kinetic(bset)
-<<<<<<< HEAD:Combined/goose.py
 
 ## Nuclei-electron potential energy (From Psi4)
-=======
 pT = mints.ao_kinetic().np
 
 ## Nuclei-electron potential energy
->>>>>>> a83a7008777e0e58fc7604a9312afa0417726838:final/goose.py
-
 V = mints.ao_potential().np
 
 ## Electron repulsion integral (From Psi4)
