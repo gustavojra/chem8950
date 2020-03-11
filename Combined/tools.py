@@ -27,7 +27,10 @@ def emoji(key):
     "brinde" : b'\xF0\x9F\x8D\xBB'.decode('utf-8'),
     "X"      : b'\xE2\x9D\x8C'.decode('utf-8'),
     "O"      : b'\xE2\xAD\x95'.decode('utf-8'),
-    "Obold"  : b'\xF0\x9F\x94\xB4'.decode('utf-8')
+    "Obold"  : b'\xF0\x9F\x94\xB4'.decode('utf-8'),
+    "bchart" : b'\xF0\x9F\x93\x8A'.decode('utf-8'),
+    "top"    : b'\xF0\x9F\x94\x9D'.decode('utf-8'),
+    "trophy" : b'\xF0\x9F\x8F\x86'.decode('utf-8')
     }
     return stored[key]
 

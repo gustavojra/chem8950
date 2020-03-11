@@ -4,7 +4,7 @@ import sys
 sys.path.append('.')
 from integrals import *
 from tools import *
-#psi4.core.be_quiet()
+psi4.core.be_quiet()
 
 #################################################################################################
 ##  _   _                  _                                      _____                  _     ##
@@ -21,12 +21,11 @@ def contamination(C_a, C_b, S, nalpha, nbeta):
     Smetric = np.einsum('ui,uv,vj->ij', C_a[:,:nalpha], S, C_b[:,:nbeta])
     return min(nalpha, nbeta) - np.vdot(Smetric, Smetric)
 
-def compute_uhf(return_C = False, return_integrals = False):
+def compute_uhf(Settings, return_C = False, return_integrals = False):
 
     # READ INPUT FILE
 
     print('\nReading input...', end=' ')
-    from input import Settings
     molecule = psi4.geometry(Settings['molecule'])
     molecule.update_geometry()
     basis = psi4.core.BasisSet.build(molecule, 'BASIS', Settings['basis'], puream=0)
@@ -193,4 +192,5 @@ def compute_uhf(return_C = False, return_integrals = False):
 
 if __name__ == '__main__':
     
-    compute_uhf()
+    from input import Settings
+    compute_uhf(Settings)

@@ -30,6 +30,14 @@ class Determinant:
         out += '\n' + '-'*(3+self.order)
         return out
 
+    def short_info(self):
+
+        # Like str, but shorter, for a one line printings
+
+        out = '\u03B1 = ('+ np.binary_repr(self.alpha, width=abs(self.order))[::-1] + ')'
+        out += '   \u03B2 = ('+ np.binary_repr(self.beta, width=abs(self.order))[::-1] + ')'
+        return out
+
     def __eq__(self, other):
 
         # Check if two determinants are the same

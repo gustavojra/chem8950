@@ -1,6 +1,6 @@
 Settings = dict()
 
-Settings["basis"] = "3-21g"
+Settings["basis"] = "sto-3g"
 Settings["molecule"] = """
   0 1
   O
@@ -13,5 +13,5 @@ Settings["molecule"] = """
 Settings["nalpha"] = 5
 Settings["nbeta"] = 5
 Settings["scf_max_iter"] = 50
-Settings["active_space"] = 'oooaaaaaaaaaa'
-Settings["excitation_level"] = 3
+Settings["active_space"] = 'full'
+Settings["excitation_level"] = 'full'
