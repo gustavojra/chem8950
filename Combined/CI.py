@@ -162,6 +162,7 @@ def compute_CI(Settings):
     # Build Hamiltonian matrix
     print("Building Hamiltonian Matrix", end=' ')
     H = get_Hamiltonian(determinants, h, ERI)
+
     print(emoji('check'))
     
     # Diagonalize Hamiltonian

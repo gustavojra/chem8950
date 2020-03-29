@@ -42,7 +42,7 @@ class Determinant:
 
         # Check if two determinants are the same
 
-        return self.alpha == other.alpha and self.beta == self.neta
+        return self.alpha == other.alpha and self.beta == other.beta
 
     def __sub__(self, other,v=False):
 
