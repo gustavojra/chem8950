@@ -9,7 +9,7 @@ from tools import *
 from Hamiltonian import get_Hamiltonian
 
 def compute_CI(Settings):
-    Escf, C, _ , h, g, Vnuc = compute_uhf(Settings, return_C=True, return_integrals=True)
+    Escf, C, _ , _, _, h, g, Vnuc = compute_uhf(Settings, return_C=True, return_integrals=True)
     
     print("""
     =========================================

@@ -4,7 +4,7 @@ import sys
 sys.path.append('.')
 from integrals import *
 from tools import *
-#psi4.core.be_quiet()
+psi4.core.be_quiet()
 
 #################################################################################################
 ##  _   _                  _                                      _____                  _     ##

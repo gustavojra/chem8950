@@ -12,3 +12,5 @@ Settings["molecule"] = """
 Settings["nalpha"] = 5
 Settings["nbeta"] = 5
 Settings["scf_max_iter"] = 50
+Settings["active_space"] = 'oooaaaaa'
+Settings["excitation_level"] = 'full'

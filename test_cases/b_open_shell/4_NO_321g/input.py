@@ -10,4 +10,4 @@ Settings["molecule"] = """
 """
 Settings["nalpha"] = 8
 Settings["nbeta"] = 7
-Settings["scf_max_iter"] = 600
+Settings["scf_max_iter"] = 400
