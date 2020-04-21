@@ -1,6 +1,7 @@
 Settings = dict()
 
 Settings["basis"] = "cc-pvdz"
+Settings["df_basis"] = "cc-pvdz-ri"
 Settings["molecule"] = """
   0 1
   O
@@ -13,3 +14,4 @@ Settings["molecule"] = """
 Settings["nalpha"] = 5
 Settings["nbeta"] = 5
 Settings["scf_max_iter"] = 50
+Settings["cc_max_iter"]=75

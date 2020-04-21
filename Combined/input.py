@@ -1,17 +1,19 @@
 Settings = dict()
 
-Settings["basis"] = "sto-3g"
+Settings["basis"] = "cc-pvtz"
+Settings["df_basis"] = "cc-pvtz-ri"
 Settings["molecule"] = """
   0 1
   O
   H 1 R
   H 1 R 2 A
-  R = 0.9
+  R = 1.0
   A = 104.5
   symmetry c1
 """
 Settings["nalpha"] = 5
-Settings["nbeta"] = 5
+Settings["nbeta"] = 4
 Settings["scf_max_iter"] = 50
+Settings["cc_max_iter"]  = 75
 Settings["active_space"] = 'full'
 Settings["excitation_level"] = 'full'

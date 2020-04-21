@@ -1,6 +1,7 @@
 Settings = dict()
 
 Settings["basis"] = "3-21g"
+Settings["df_basis"] = "3-21g"
 Settings["molecule"] = """
   0 3
   O

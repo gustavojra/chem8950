@@ -21,11 +21,13 @@ def contamination(C_a, C_b, S, nalpha, nbeta):
     Smetric = np.einsum('ui,uv,vj->ij', C_a[:,:nalpha], S, C_b[:,:nbeta])
     return min(nalpha, nbeta) - np.vdot(Smetric, Smetric)
 
-def compute_uhf(Settings, return_C = False, return_integrals = False):
+def compute_uhf(Settings, return_C = False, return_integrals = False, silent=False, psi4compare=True):
+
+    printif = print if not silent else lambda *k, **w: None
 
     # READ INPUT FILE
 
-    print('\nReading input...', end=' ')
+    printif('\nReading input...', end=' ')
     molecule = psi4.geometry(Settings['molecule'])
     molecule.update_geometry()
     basis = psi4.core.BasisSet.build(molecule, 'BASIS', Settings['basis'], puream=0)
@@ -36,7 +38,7 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
     Vnuc = molecule.nuclear_repulsion_energy()
     
     scf_max_iter = Settings['scf_max_iter']
-    print(emoji('check'))
+    printif(emoji('check'))
     
     # COMPUTE INTEGRALS
     
@@ -53,9 +55,9 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
         b = BasisFunction(center, c, exp, shell.am)
         bset.add(b)
     
-    print('Computing integrals')
+    printif('Computing integrals')
     
-    print(bset)
+    printif(bset)
     ## Overlap
     
     S = overlap(bset)
@@ -78,11 +80,11 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
     # FORM ONE-ELECTRON HAMILTONIAN
     
     h = T + V
-    print('Done ' + emoji('check'))
+    printif('Done ' + emoji('check'))
     
     # CONSTRUCT THE ORTHOGONALIZER
     
-    print('Initial guess...', end=' ')
+    printif('Initial guess...', end=' ')
     A = scipy.linalg.fractional_matrix_power(S, -0.5)
     
     # INITIAL DENSITY MATRIX
@@ -98,7 +100,7 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
     F_b = h + np.einsum('ps,uvps', D_b, G) + np.einsum('ps,uvps', D_a, ERI)
     
     E = 0.5*(np.einsum('uv,uv->', D_a + D_b, h) + np.einsum('uv,uv->', D_a, F_a) + np.einsum('uv,uv->', D_b, F_b)) + Vnuc
-    print(emoji('check'))
+    printif(emoji('check'))
     # START SCF ITERATIONS
     
     rms_a = 1
@@ -111,11 +113,11 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
     dE_max = 1.e-12
     rms_max = 1.e-8
     
-    print('\nStarting SCF iterations' + emoji('cycle'))
-    print('Convergency criteria:')
-    print('{} Max Energy Diff:  {:<4.2E}'.format(emoji('pin'),dE_max))
-    print('{} Max RMS density:  {:<4.2E}'.format(emoji('pin'),rms_max))
-    print('='*40)
+    printif('\nStarting SCF iterations' + emoji('cycle'))
+    printif('Convergency criteria:')
+    printif('{} Max Energy Diff:  {:<4.2E}'.format(emoji('pin'),dE_max))
+    printif('{} Max RMS density:  {:<4.2E}'.format(emoji('pin'),rms_max))
+    printif('='*40)
     
     while abs(dE) > dE_max or abs(rms_a) > rms_max or abs(rms_b) > rms_max:
         dE = -E
@@ -138,26 +140,27 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
         dE += E
         rms_a = np.sqrt(np.sum(np.square(D_a-rms_a)))
         rms_b = np.sqrt(np.sum(np.square(D_b-rms_b)))
-        print('Iteration {}'.format(numoji(ite)))
-        print('SCF Energy:         {:>16.12f}'.format(E))
-        print('Energy change:      {:>16.12f}'.format(dE))
-        print('MAX rms change:     {:>16.12f}'.format(max(rms_a,rms_b)))
-        print('='*40)
+        printif('Iteration {}'.format(numoji(ite)))
+        printif('SCF Energy:         {:>16.12f}'.format(E))
+        printif('Energy change:      {:>16.12f}'.format(dE))
+        printif('MAX rms change:     {:>16.12f}'.format(max(rms_a,rms_b)))
+        printif('='*40)
         ite += 1
     
-    print('SCF Converged ' + 2*emoji('viva'))
-    print('{} Final SCF Energy:   {:>16.12f}'.format(emoji('bolt'),E))
-    print('{} Spin-contamination  {:>16.12f}'.format(emoji('ugh'), contamination(C_a, C_b, S, nalpha, nbeta)))
+    printif('SCF Converged ' + 2*emoji('viva'))
+    printif('{} Final SCF Energy:   {:>16.12f}'.format(emoji('bolt'),E))
+    printif('{} Spin-contamination  {:>16.12f}'.format(emoji('ugh'), contamination(C_a, C_b, S, nalpha, nbeta)))
     
-    psi4.set_options({'basis': Settings['basis'],
-                      'scf_type': 'pk',
-                      'e_convergence': dE_max,
-                      'puream'   : False,
-                      'reference': 'uhf'})
     
-    # Compare to Psi4
-    E_psi4, wfn_psi4 = psi4.energy('scf', return_wfn=True)
-    print('{} Psi4  SCF Energy:   {:>16.12f}'.format(emoji('eyes'),E_psi4))
+    if psi4compare:
+        psi4.set_options({'basis': Settings['basis'],
+                          'scf_type': 'pk',
+                          'e_convergence': dE_max,
+                          'puream'   : False,
+                          'reference': 'uhf'})
+        # Compare to Psi4
+        E_psi4, wfn_psi4 = psi4.energy('scf', return_wfn=True)
+        printif('{} Psi4  SCF Energy:   {:>16.12f}'.format(emoji('eyes'),E_psi4))
     
     # Compute Dipole moment
     au2debye = 1/0.393430307
@@ -172,14 +175,14 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
     dipole_z = np.einsum('uv,uv->', D_a, Dz) + np.einsum('uv,uv->', D_b, Dz) + nucdip[2]
     total_dipole = np.array([dipole_x, dipole_y, dipole_z])
     
-    print('\n{} Dipole Moment (atomic units):'.format(emoji('plug')))
-    print('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
-    print('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole))
-    print(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole)))
-    print('\n{} Dipole Moment (Debye):'.format(emoji('plug')))
-    print('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
-    print('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole*au2debye))
-    print(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole*au2debye)))
+    printif('\n{} Dipole Moment (atomic units):'.format(emoji('plug')))
+    printif('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
+    printif('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole))
+    printif(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole)))
+    printif('\n{} Dipole Moment (Debye):'.format(emoji('plug')))
+    printif('{:^8}  {:^8}  {:^8}'.format('X', 'Y', 'Z'))
+    printif('{:^8.4f}  {:^8.4f}  {:^8.4f}'.format(*total_dipole*au2debye))
+    printif(' Magnitude: {:< 8.4f}'.format(np.linalg.norm(total_dipole*au2debye)))
 
     if return_C and return_integrals:
         return (E, C_a, C_b, eps_a, eps_b, h, ERI, Vnuc)
@@ -193,4 +196,4 @@ def compute_uhf(Settings, return_C = False, return_integrals = False):
 if __name__ == '__main__':
     
     from input import Settings
-    compute_uhf(Settings)
+    compute_uhf(Settings, silent=True)

@@ -1,6 +1,7 @@
 Settings = dict()
 
 Settings["basis"] = "6-31g"
+Settings["df_basis"] = "6-31g"
 Settings["molecule"] = """
   0 1
   C       -4.0431729517      2.5597260362      0.0000003487
@@ -13,3 +14,4 @@ Settings["molecule"] = """
 Settings["nalpha"] = 5
 Settings["nbeta"] = 5
 Settings["scf_max_iter"] = 50
+Settings["cc_max_iter"]=75
