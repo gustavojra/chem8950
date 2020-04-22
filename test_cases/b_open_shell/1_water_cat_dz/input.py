@@ -1,6 +1,6 @@
 Settings = dict()
 
-Settings["basis"] = "cc-pVTZ"
+Settings["basis"] = "cc-pVDZ"
 Settings["df_basis"] = Settings["basis"] + "-ri"
 Settings["molecule"] = """
   1 2
