@@ -2,3 +2,4 @@
 *.clean
 __pychache__
 timer.dat
+*.ipynb*
