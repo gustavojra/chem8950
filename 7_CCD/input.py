@@ -3,7 +3,7 @@ Settings = dict()
 Settings["basis"] = "cc-pvdz"
 Settings["df_basis"] = "cc-pvdz-ri"
 Settings["molecule"] = """
-  0 1
+  1 2
   O
   H 1 R
   H 1 R 2 A
